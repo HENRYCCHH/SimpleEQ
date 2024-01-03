@@ -76,10 +76,10 @@ void RotarySliderWithLabels::paint(juce::Graphics &g)
     
     auto sliderBounds = getSliderBounds();
     
-    g.setColour(Colours::red);
-    g.drawRect(getLocalBounds());
-    g.setColour(Colours::yellow); 
-    g.drawRect(sliderBounds);
+//    g.setColour(Colours::red);
+//    g.drawRect(getLocalBounds());
+//    g.setColour(Colours::yellow); 
+//    g.drawRect(sliderBounds);
     
     getLookAndFeel().drawRotarySlider(g, 
                                       sliderBounds.getX(),
@@ -108,8 +108,39 @@ juce::Rectangle<int> RotarySliderWithLabels::getSliderBounds() const
 
 juce::String RotarySliderWithLabels::getDisplayString() const
 {
-    return juce::String(getValue()) ;
+//    return juce::String(getValue());
+    if( auto* choiceParam = dynamic_cast<juce::AudioParameterChoice*>(param))
+        return choiceParam->getCurrentChoiceName();
+    
+    juce::String str;
+    bool addK = false;
+    
+    if( auto* floatParam = dynamic_cast<juce::AudioParameterFloat*>(param))
+    {
+        float val = getValue() ;
+        if( val > 999.f)
+        {
+            val /= 1000.f; //1001 / 1000 = 1.001
+            addK = true;
+        }
+        str = juce::String(val, (addK ? 2 : 0));
+    }
+    else
+    {
+        jassertfalse; //this shouldn't happen!
+    }
+    
+    if( suffix.isNotEmpty())
+    {
+        str << " ";
+        if ( addK )
+            str << "k";
+        
+        str << suffix;
+    }
+    return str;
 }
+
 //==============================================================================
 
 ResponseCurveComponent::ResponseCurveComponent(SimpleEQAudioProcessor& p) : audioProcessor(p)
@@ -236,13 +267,13 @@ void ResponseCurveComponent::paint (juce::Graphics& g)
 SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
 
-peakFreqSlider(*audioProcessor.apvts.getParameter("PeakFreq"),"Hz"),
-peakGainSlider(*audioProcessor.apvts.getParameter("PeakGain"),"dB"),
-peakQualitySlider(*audioProcessor.apvts.getParameter("PeakQuality"), ""),
-lowCutFreqSlider(*audioProcessor.apvts.getParameter("LowCutFreq"),"Hz"),
-highCutFreqSlider(*audioProcessor.apvts.getParameter("HighCutFreq"),"Hz"),
-lowCutSlopeSlider(*audioProcessor.apvts.getParameter("LowCutSlope"),"dB/Oct"),
-highCutSlopeSlider(*audioProcessor.apvts.getParameter("HighCutSlope"),"dB/Oct"),
+peakFreqSlider(*audioProcessor.apvts.getParameter("Peak Freq"),"Hz"),
+peakGainSlider(*audioProcessor.apvts.getParameter("Peak Gain"),"dB"),
+peakQualitySlider(*audioProcessor.apvts.getParameter("Peak Quality"),""),
+lowCutFreqSlider(*audioProcessor.apvts.getParameter("LowCut Freq"),"Hz"),
+highCutFreqSlider(*audioProcessor.apvts.getParameter("HighCut Freq"),"Hz"),
+lowCutSlopeSlider(*audioProcessor.apvts.getParameter("LowCut Slope"),"dB/Oct"),
+highCutSlopeSlider(*audioProcessor.apvts.getParameter("HighCut Slope"),"dB/Oct"),
 
 responseCurveComponent(audioProcessor),
 peakFreqSliderAttachment(audioProcessor.apvts, "Peak Freq", peakFreqSlider),
