@@ -365,16 +365,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout  SimpleEQAudioProcessor::cre
                                                             "LowCut Slope",
                                                             stringArray,
                                                             0));
-    layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("HighCut Slope",2),
+    layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID("HighCut Slope",1),
                                                             "HighCut Slope",
                                                             stringArray,
                                                             0));
     
     
-    layout.add(std::make_unique<juce::AudioParameterBool> ("LowCut Bypassed", "LowCut Bypassed", false));
-    layout.add(std::make_unique<juce::AudioParameterBool> ("Peak Bypassed", "Peak Bypassed", false));
-    layout.add(std::make_unique<juce::AudioParameterBool> ("HighCut Bypassed", "HighCut Bypassed", false)) ;
-    layout.add(std::make_unique<juce::AudioParameterBool> ("Analyzer Enabled", "Analyzer Enabled", true));
+    layout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID("LowCut Bypassed", 1), "LowCut Bypassed", false));
+    layout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID("Peak Bypassed", 1), "Peak Bypassed", false));
+    layout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID("HighCut Bypassed",1), "HighCut Bypassed", false)) ;
+    layout.add(std::make_unique<juce::AudioParameterBool> (juce::ParameterID("Analyzer Enabled",1), "Analyzer Enabled", true));
     
     return layout;
 }
