@@ -1,3 +1,5 @@
+
+![Simple EQ GUI](https://github.com/HENRYCCHH/SimpleEQ/blob/main/SimpleEQ_GUI.png)
 My Creation of a SimpleEQ audio plugin, 
 following  Makat Music's guideline in mind, 
 utilizing the JUCE Framework. 
